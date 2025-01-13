@@ -16,29 +16,70 @@
             android:layout_height="wrap_content" />
 
         <EditText
-            android:id="@+id/editTextText"
+            android:id="@+id/editTextTitulo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="text"
-            android:text="Name" />
+            android:hint="Titulo"
+            android:inputType="text" />
 
         <EditText
-            android:id="@+id/editTextText2"
+            android:id="@+id/editTextDescripcion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="text"
-            android:text="Name" />
+            android:hint="Descripción"
+            android:inputType="text" />
 
-        <EditText
-            android:id="@+id/editTextDate"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:focusableInTouchMode="false"
-            android:focusable="false"
-            android:ems="10"
-            android:inputType="date" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/editTextDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:hint="DD/MM/AAAA"
+                android:inputType="date" />
+
+            <EditText
+                android:id="@+id/editTextHora"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:ems="10"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:hint="00:00"
+                android:inputType="text" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/buttonCancelar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="100dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:text="Cancelar" />
+
+            <Button
+                android:id="@+id/buttonGuardar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Guardar" />
+        </LinearLayout>
 
     </LinearLayout>
 </FrameLayout>

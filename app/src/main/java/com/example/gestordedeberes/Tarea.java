@@ -10,6 +10,8 @@ public class Tarea implements Parcelable {
     private String titulo;
     private String descipcion;
     private String fecha;
+    private String hora;
+    private boolean estado;
 
     protected Tarea(Parcel in) {
         titulo = in.readString();
@@ -41,7 +43,7 @@ public class Tarea implements Parcelable {
         parcel.writeString(fecha);
     }
 
-    private enum Asignatura{
+    public enum Asignatura{
         AD,
         PMULT,
         PSP,
@@ -50,11 +52,13 @@ public class Tarea implements Parcelable {
         EIE
     }
 
-    public Tarea(Asignatura asignatura, String titulo, String descipcion, String fecha) {
+    public Tarea( Asignatura asignatura,String titulo, String descipcion, String fecha, String hora) {
         this.asignatura = asignatura;
         this.titulo = titulo;
         this.descipcion = descipcion;
         this.fecha = fecha;
+        this.hora = hora;
+        estado = false;
     }
 
     public Tarea() {
@@ -90,5 +94,21 @@ public class Tarea implements Parcelable {
 
     public void setFecha(String fecha) {
         this.fecha = fecha;
+    }
+
+    public String getHora() {
+        return hora;
+    }
+
+    public void setHora(String hora) {
+        this.hora = hora;
+    }
+
+    public boolean isEstado() {
+        return estado;
+    }
+
+    public void setEstado(boolean estado) {
+        this.estado = estado;
     }
 }
