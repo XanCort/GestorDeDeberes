@@ -26,9 +26,6 @@ public class DialogTarea extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
-
-
-
         Calendar calendar = Calendar.getInstance(); // Obtén la fecha y hora actual
         int año = calendar.get(Calendar.YEAR);     // Año actual
         int mes = calendar.get(Calendar.MONTH);   // Mes actual (0 = enero, 1 = febrero, etc.)
@@ -48,7 +45,6 @@ public class DialogTarea extends DialogFragment {
         EditText campoHora = miVista.findViewById(R.id.editTextHora);
         campoFecha.setShowSoftInputOnFocus(false);
 
-
         Spinner spinner = miVista.findViewById(R.id.spinner);
         Tarea.Asignatura[] asignaturas = Tarea.Asignatura.values();
 
@@ -56,7 +52,6 @@ public class DialogTarea extends DialogFragment {
         for (Tarea.Asignatura asignatura : asignaturas) {
             listaAsignaturas.add(asignatura.name()); // Usar name() para obtener la representación en texto
         }
-
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this.getContext(),
@@ -81,7 +76,6 @@ public class DialogTarea extends DialogFragment {
                 }
             }
 
-
             año = Integer.parseInt(campoFecha.getText().toString().split("/")[2]);
             mes = (Integer.parseInt(campoFecha.getText().toString().split("/")[1]))-1;
             dia = Integer.parseInt(campoFecha.getText().toString().split("/")[0]);
@@ -90,9 +84,6 @@ public class DialogTarea extends DialogFragment {
             minutosActuales = Integer.parseInt(campoHora.getText().toString().split(":")[1]);
 
         }
-
-
-
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 getContext(),
@@ -125,8 +116,10 @@ public class DialogTarea extends DialogFragment {
 
         buttonguardar.setOnClickListener(e->{
             Bundle bundleTarea = new Bundle();
+            int id=0;
             if(getArguments()!=null){
                 Tarea tareaEditada = getArguments().getParcelable("tarea");
+                id = tareaEditada.getId();
                 bundleTarea.putParcelable("tareaEditada",tareaEditada);
             }
             String titulo, descripcion, fecha, hora, asignatura;
@@ -140,6 +133,7 @@ public class DialogTarea extends DialogFragment {
             bundleTarea.putString("Descripcion",descripcion);
             bundleTarea.putString("Fecha",fecha);
             bundleTarea.putString("Hora",hora);
+            bundleTarea.putInt("Id",id);
             getParentFragmentManager().setFragmentResult("tarea",bundleTarea);
             this.dismiss();
         });

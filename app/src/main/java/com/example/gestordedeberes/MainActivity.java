@@ -2,6 +2,9 @@ package com.example.gestordedeberes;
 
 import android.app.AlertDialog;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
@@ -29,17 +32,22 @@ public class MainActivity extends AppCompatActivity {
 
     private TareaAdapter tareaAdapter;
     private ArrayList<Tarea> tareas;
-
+    private SQLiteDatabase bdEscribir;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        SQLiteDatabase bdLectura = new BaseDatos(this).getReadableDatabase();
+        bdEscribir= new BaseDatos(this).getWritableDatabase();
 
         tareas = new ArrayList<>();
+        /*
         tareas.add(new Tarea(Tarea.Asignatura.DI,"Titulo","Descripcion","30/1/2020","10:10"));
         tareas.add(new Tarea(Tarea.Asignatura.DI,"Titulo","Descripcion","30/1/2020","10:10"));
         tareas.add(new Tarea(Tarea.Asignatura.EIE,"Titulo","Descripcion","30/1/2020","10:10"));
         tareas.add(new Tarea(Tarea.Asignatura.PMULT,"Titulo","Descripcion","30/1/2020","10:10"));
+
+         */
         // Crear el adaptador
         tareaAdapter = new TareaAdapter(tareas, (tarea) -> {
             mostrarMenuInferior(tarea);
@@ -74,11 +82,71 @@ public class MainActivity extends AppCompatActivity {
                     asignatura = Tarea.Asignatura.AD;
             }
 
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("Asignatura",asignatura.toString());
+            contentValues.put("Titulo",titulo);
+            contentValues.put("Descripcion",descripcion);
+            contentValues.put("Fecha",fecha);
+            contentValues.put("Hora",hora);
+            if(result.getParcelable("tareaEditada")!=null){
+                bdEscribir.update("Tareas",contentValues,"id=?",new String[]{result.getInt("Id")+""});
+            }else{
+                bdEscribir.insert("tareas",null,contentValues);
+            }
+
             Tarea nuevaTarea = new Tarea(asignatura,titulo, descripcion, fecha, hora);
             tareas.add(nuevaTarea);
             tareas.remove(result.getParcelable("tareaEditada"));
             tareaAdapter.notifyDataSetChanged();
         });
+
+
+        String consulta2 = "SELECT * FROM tareas";
+        Cursor cursor = bdLectura.rawQuery(consulta2,
+                null);
+        if (cursor.moveToFirst()) {
+            do {
+                String asignaturaRecuperada = cursor.getString(1);
+                Tarea.Asignatura asignatura;
+
+                switch (asignaturaRecuperada){
+                    case "AD":
+                        asignatura = Tarea.Asignatura.AD;
+                        break;
+                    case "PMULT":
+                        asignatura = Tarea.Asignatura.PMULT;
+                        break;
+                    case "PSP":
+                        asignatura = Tarea.Asignatura.PSP;
+                        break;
+                    case "DI":
+                        asignatura = Tarea.Asignatura.DI;
+                        break;
+                    case "SXE":
+                        asignatura = Tarea.Asignatura.SXE;
+                        break;
+                    case "EIE":
+                        asignatura = Tarea.Asignatura.EIE;
+                        break;
+                    default:
+                        asignatura = Tarea.Asignatura.AD;
+                }
+
+
+                int id = cursor.getInt(0);
+                String Titulo =cursor.getString(2);
+                String Descripcion =cursor.getString(3);
+                String Fecha =cursor.getString(4);
+                String Hora =cursor.getString(5);
+                Tarea nuevaTarea = new Tarea(asignatura,Titulo,Descripcion,Fecha,Hora);
+                nuevaTarea.setId(id);
+                tareas.add(nuevaTarea);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+
+
+
 
         Collections.sort(tareas, new Comparator<Tarea>() {
             @Override
@@ -118,8 +186,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Asignar el adaptador al RecyclerView
         rvTareas.setAdapter(tareaAdapter);
-
-
     }
 
     private void mostrarMenuInferior(Tarea tarea){
@@ -133,6 +199,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         menuInferiorView.findViewById(R.id.delete_option).setOnClickListener(v->{
+            bdEscribir.delete("Tareas","id=?",new String[]{tarea.getId()+""} );
             tareas.remove(tarea);
             tareaAdapter.notifyDataSetChanged();
             menuInferior.dismiss();
@@ -145,9 +212,6 @@ public class MainActivity extends AppCompatActivity {
             datosTarea.putParcelable("tarea", tarea);
             editarTarea.setArguments(datosTarea);
             editarTarea.show(getSupportFragmentManager(),"EditarTarea");
-
-
-
         });
 
 

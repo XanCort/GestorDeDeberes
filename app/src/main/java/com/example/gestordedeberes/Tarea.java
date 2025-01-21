@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 public class Tarea implements Parcelable {
+    private int id;
     private Asignatura asignatura;
     private String titulo;
     private String descipcion;
@@ -110,5 +111,13 @@ public class Tarea implements Parcelable {
 
     public void setEstado(boolean estado) {
         this.estado = estado;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
