@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,6 +31,7 @@ import java.util.Comparator;
 
 public class MainActivity extends AppCompatActivity {
 
+    private TareaViewModel tareaViewModel;
     private TareaAdapter tareaAdapter;
     private ArrayList<Tarea> tareas;
     private SQLiteDatabase bdEscribir;
@@ -40,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
         SQLiteDatabase bdLectura = new BaseDatos(this).getReadableDatabase();
         bdEscribir= new BaseDatos(this).getWritableDatabase();
 
+
+        tareaViewModel = new ViewModelProvider(this).get(TareaViewModel.class);
         tareas = new ArrayList<>();
         /*
         tareas.add(new Tarea(Tarea.Asignatura.DI,"Titulo","Descripcion","30/1/2020","10:10"));
@@ -52,6 +56,12 @@ public class MainActivity extends AppCompatActivity {
         tareaAdapter = new TareaAdapter(tareas, (tarea) -> {
             mostrarMenuInferior(tarea);
         });
+
+        tareaViewModel.getTareas().observe(this, nuevasTareas->{
+            tareaAdapter.setTareas(nuevasTareas);
+        });
+
+        tareaViewModel.cargarTareas(this);
 
         getSupportFragmentManager().setFragmentResultListener("tarea", this, (requestKey, result) -> {
             String titulo = result.getString("Titulo");

@@ -50,6 +50,10 @@ public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHol
 
     }
 
+    public void setTareas(ArrayList<Tarea> nuevasTareas) {
+        this.coleccion = nuevasTareas;
+    }
+
     public interface OnItemClickListener{
         public void onItemClick(Tarea tarea);
     }
